@@ -26,28 +26,32 @@ namespace System.Text.Json.Serialization.Tests
         {
             T value = DataGenerator.Generate<T>();
 
-            _serialized = JsonSerializer.ToString(value);
+            _serialized = JsonSerializer.Serialize(value);
 
             _utf8Serialized = Encoding.UTF8.GetBytes(_serialized);
 
             _memoryStream = new MemoryStream(capacity: short.MaxValue);
-            await JsonSerializer.WriteAsync(_memoryStream, value);
+            await JsonSerializer.SerializeAsync(_memoryStream, value);
         }
 
         [BenchmarkCategory(Categories.CoreFX, Categories.JSON)]
-        [Benchmark]
-        public T DeserializeFromString() => JsonSerializer.Parse<T>(_serialized);
+//        [Benchmark]
+        public T DeserializeFromString() => JsonSerializer.Deserialize<T>(_serialized);
 
         [BenchmarkCategory(Categories.CoreFX, Categories.JSON)]
         [Benchmark]
-        public T DeserializeFromUtf8Bytes() => JsonSerializer.Parse<T>(_utf8Serialized);
+        public void JsonEncodedTextEncode() => JsonEncodedText.Encode(_serialized);
 
         [BenchmarkCategory(Categories.CoreFX, Categories.JSON)]
-        [Benchmark]
+//        [Benchmark]
+        public T DeserializeFromUtf8Bytes() => JsonSerializer.Deserialize<T>(_utf8Serialized);
+
+        [BenchmarkCategory(Categories.CoreFX, Categories.JSON)]
+//        [Benchmark]
         public async Task<T> DeserializeFromStream()
         {
             _memoryStream.Position = 0;
-            T value = await JsonSerializer.ReadAsync<T>(_memoryStream);
+            T value = await JsonSerializer.DeserializeAsync<T>(_memoryStream);
             return value;
         }
 
