@@ -40,6 +40,7 @@ namespace MicroBenchmarks
         public const string JIT = "JIT";
         public const string JSON = "JSON";
         public const string LINQ = "LINQ";
+        public const string ReflectionMetadata = "ReflectionMetadata";
         public const string Reflection = "Reflection";
         public const string SIMD = "SIMD";
         public const string Span = "Span";
